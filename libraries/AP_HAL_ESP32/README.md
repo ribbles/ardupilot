@@ -115,11 +115,16 @@ You can find more info here : [ESPTOOL](https://github.com/espressif/esptool)
 You can also find the cmake esp-idf project at `libraries/AP_HAL_ESP32/targets/esp-idf` for idf.py command. But see next section to understand how ardupilot is compiled on ESP32.
 
 ---
-OLD
 
-Alternatively, the "./waf plane' build outputs a python command that y can cut-n-paste to flash... buzz found that but using that command with a slower baudrate of 921600 instead of its recommended 2000000 worked for him:
+## OLD
+
+Alternatively, the `./waf plane` build outputs a python command that y can cut-n-paste to flash... buzz found that but using that command with a slower baudrate of 921600 instead of its recommended 2000000 worked for him:
+
+```
 cd ardupilot
 python ./modules/esp_idf/components/esptool_py/esptool/esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0xf000 ./build/esp32buzz/idf-plane/ota_data_initial.bin 0x1000 ./build/esp32buzz/idf-plane/bootloader/bootloader.bin 0x20000 ./build/esp32buzz/idf-plane/arduplane.bin 0x8000 ./build/esp32buzz/idf-plane/partitions.bin
+```
+
 ---
 
 ## How is compiled Ardupilot on esp32
@@ -142,7 +147,7 @@ Currently esp32 dev board with connected gy-91 10dof sensor board is supported. 
 ### Uart connecion/s
 Internally connected on most devboards, just for reference.
 
-After flashing the esp32 , u can connect with a terminal app of your preference to the same COM port  ( eg /dev/ttyUSB0) at a baud rate of 115200, software flow control, 8N1 common uart settings, and get to see the output from hal.console->printf("...") and other console messages.
+After flashing the esp32 , u can connect with a terminal app of your preference to the same COM port  ( eg `/dev/ttyUSB0`) at a baud rate of 115200, software flow control, 8N1 common uart settings, and get to see the output from `hal.console->printf("...")` and other console messages.
 
 ### Console/usb/boot-messages/mavlink telem aka serial0/uart0:
 
@@ -180,11 +185,14 @@ After flashing the esp32 , u can connect with a terminal app of your preference 
 
 
 ### Compass (using i2c)
- - u need to set the ardupilot params, and connected a GPS that has at least one i2c compass on it.. tested this with a HMC5883 and/or LIS3MDL
-COMPASS_ENABLE=1
-COMPASS_EXTERNAL=1
-COMPASS_EXTERN2=1
-COMPASS_EXTERN3=1
+ - u need to set the ardupilot params, and connected a GPS that has at least one i2c compass on it.. tested this with a `HMC5883` and/or `LIS3MDL`
+
+```
+COMPASS_ENABLE 1
+COMPASS_EXTERNAL 1
+COMPASS_EXTERN2 1
+COMPASS_EXTERN3 1
+```
 
 ### Analog input/s
 
@@ -200,13 +208,14 @@ if HAL_ESP32_ADC_PINS == HAL_ESP32_ADC_PINS_OPTION1:
 | GND     | GND       |
 
 eg, set ardupilot params like this:
-RSSI_ANA_PIN  = 3  - and it will attempt to read the adc value on GPIO39 for rssi data
-BATT_CURR_PIN = 2  - and it will attempt to read the adc value on GPIO34 for battery current
-BATT_VOLT_PIN = 1  - and it will attempt to read the adc value on GPIO35 for  battery voltage
-ARSPD_PIN =     4  - and it will attempt to read the adc value on GPIO36 for analog airspeed data
+
+ * `RSSI_ANA_PIN  = 3`  - and it will attempt to read the adc value on GPIO39 for rssi data
+ * `BATT_CURR_PIN = 2`  - and it will attempt to read the adc value on GPIO34 for battery current
+ * `BATT_VOLT_PIN = 1`  - and it will attempt to read the adc value on GPIO35 for  battery voltage
+ * `ARSPD_PIN =     4`  - and it will attempt to read the adc value on GPIO36 for analog airspeed data
 
 
-if HAL_ESP32_ADC_PINS == HAL_ESP32_ADC_PINS_OPTION2:
+if `HAL_ESP32_ADC_PINS == HAL_ESP32_ADC_PINS_OPTION2`:
 | ESP32   | AnalogIn   |
 | ---     | ---        |
 | GPIO35  | 35         |
@@ -216,10 +225,11 @@ if HAL_ESP32_ADC_PINS == HAL_ESP32_ADC_PINS_OPTION2:
 | GND     | GND        |
 
 eg, set ardupilot params like this:
-RSSI_ANA_PIN =  39  - and it will attempt to read the adc value on GPIO39 for rssi data
-BATT_CURR_PIN = 34  - and it will attempt to read the adc value on GPIO34 for battery current
-BATT_VOLT_PIN = 35  - and it will attempt to read the adc value on GPIO35 for  battery voltage
-ARSPD_PIN =     36  - and it will attempt to read the adc value on GPIO36 for analog airspeed data
+
+ * `RSSI_ANA_PIN =  39`  - and it will attempt to read the adc value on GPIO39 for rssi data
+ * `BATT_CURR_PIN = 34`  - and it will attempt to read the adc value on GPIO34 for battery current
+ * `BATT_VOLT_PIN = 35`  - and it will attempt to read the adc value on GPIO35 for  battery voltage
+ * `ARSPD_PIN =     36`  - and it will attempt to read the adc value on GPIO36 for analog airspeed data
 
 
 
@@ -235,6 +245,8 @@ ARSPD_PIN =     36  - and it will attempt to read the adc value on GPIO36 for an
 |  servo6       |PIN21|SERVO-OUT6| avail  |
 
 If you don't get any PWM output on any/some/one of the pins while ardupilot is running, be sure you have set all of these params:
+
+```
 //ail
 SERVO1_FUNCTION = 4
 // ele
@@ -248,7 +260,7 @@ SERVO5_FUNCTION = 4
 // for now make it a copy of ail,for testing etc.
 SERVO6_FUNCTION = 4
 // right now, we only have 6 channels of output due to pin limitations..
-
+```
 
 (If the RTC source is not required, then Pin12 32K_XP and Pin13 32K_XN can be used as digital GPIOs, so we do, and it works)
 
