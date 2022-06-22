@@ -767,7 +767,11 @@ class esp32(Board):
     def build(self, bld):
         super(esp32, self).build(bld)
         bld.load('esp32')
-e
+
+    def get_name(self):
+        return self.__class__.__name__
+
+
 
 class chibios(Board):
     abstract = True
