@@ -59,3 +59,6 @@
 #define CONFIG_ESP32_WIFI_TX_BA_WIN 0
 #define CONFIG_ESP32_WIFI_RX_BA_WIN 0
 
+
+// ESP-IDF doesn't have a definition for file type LINK:
+#define DT_LNK 10
